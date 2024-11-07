@@ -35,11 +35,7 @@ function getSessionId() {
 
 const session_id = getSessionId();
 
-async function postDataEmailSignup(userId) {
-    const nome = document.getElementById("nome").value;
-    const email = document.getElementById("email").value;
-    const celular = document.getElementById("input-register--phone-mask").value;
-
+async function postDataLogin(userName, userEmail, userNumber, userId, loginMethod) {
     const ipResponse = await fetch('https://api.ipify.org?format=json');
     const ipData = await ipResponse.json();
 
@@ -54,25 +50,38 @@ async function postDataEmailSignup(userId) {
     const fbclid = urlParams.get('fbclid') || "";
     const gclid = urlParams.get('gclid') || "";
 
+    let loginProvider;
+    switch (loginMethod.toLowerCase()) {
+        case 'facebook':
+            loginProvider = "Facebook";
+            break;
+        case 'google':
+            loginProvider = "Google";
+            break;
+        default:
+            loginProvider = "Unknown";
+            break;
+    }
+
     const data = {
-        event_name: "account_created",
+        event_name: "account_created", 
         event_timestamp: new Date().toISOString(),
-        user_id: userId,
-        session_id: session_id,
+        user_id: `${userId}`,
+        session_id: session_id, 
         
         user_properties: {
-            user_email: email,
-            user_name: nome,
-            user_number: celular,
+            user_email: userEmail,
+            user_name: userName,
+            user_number: userNumber,
             user_id: userId,
           },
         
         event_context: {
-            IP: ipData.ip || "",
+            IP: ipData.ip || '',
             Locale: Intl.DateTimeFormat().resolvedOptions().locale || "",
             Page: window.location.href,
             Timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-            App: { Name: "MPX Imóvel", Version: "1.0.0" },
+            App: { Name: 'MPX Imóvel', Version: '1.0.0' },
             DeviceType: /Mobile|Android|iPhone/.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
             ScreenResolution: `${window.screen.width}x${window.screen.height}`,
             SecureConnection: window.location.protocol === 'https:',
@@ -82,28 +91,15 @@ async function postDataEmailSignup(userId) {
                 City: geoData.city || "Desconhecido",
                 Latitude: geoData.latitude || "Desconhecido",
                 Longitude: geoData.longitude || "Desconhecido",
-            },
-            Campaign: {
-                utm_source: utm_source,
-                utm_medium: utm_medium,
-                utm_content: utm_content,
-                utm_campaign: utm_campaign,
-                fbclid: fbclid,
-                gclid: gclid
-            },
-            Device: {
-                UserAgent: navigator.userAgent,
-                Platform: navigator.platform,
-                Vendor: navigator.vendor
             }
         },
 
         event_properties: {
-            Signup: {
-                Method: "Email",
-                Provider: "Website Form",
+            Login: {
+                Method: loginMethod,
+                Provider: loginProvider,
                 Success: true,
-                SignupTimestamp: new Date().toISOString(),
+                LoginTimestamp: new Date().toISOString(),
             },
             PageLoad: {
                 LoadTime: window.performance ? window.performance.timing.domContentLoadedEventEnd - window.performance.timing.navigationStart : null,
@@ -133,5 +129,5 @@ async function postDataEmailSignup(userId) {
     });
 }
 
-// Chame a função com o ID do usuário
-postDataEmailSignup(properties.param1);
+// Chame a função com os parâmetros necessários
+postDataLogin(properties.param1, properties.param2, document.getElementById("input-register--phone-mask").value, properties.param3, properties.param4);

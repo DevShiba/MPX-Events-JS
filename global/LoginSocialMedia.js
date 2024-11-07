@@ -35,9 +35,12 @@ function getSessionId() {
 
 const session_id = getSessionId();
 
-async function postDataLogin(nome, email, celular, userId, loginMethod) {
+async function postDataLogin(userName, userEmail, userNumber, userId, loginMethod) {
     const ipResponse = await fetch('https://api.ipify.org?format=json');
     const ipData = await ipResponse.json();
+
+    const geoResponse = await fetch(`https://ipapi.co/${ipData.ip}/json/`);
+    const geoData = await geoResponse.json();
 
     const urlParams = new URLSearchParams(window.location.search);
     const utm_source = urlParams.get('utm_source') || "";
@@ -67,53 +70,45 @@ async function postDataLogin(nome, email, celular, userId, loginMethod) {
         session_id: session_id, 
         
         user_properties: {
-            nome: nome,
-            email: email,
-            celular: celular,
+            user_email: userEmail,
+            user_name: userName,
+            user_number: userNumber,
+            user_id: userId,
         },
         
         event_context: {
-            IP: ipData.ip || "", 
+            IP: ipData.ip || '',
             Locale: Intl.DateTimeFormat().resolvedOptions().locale || "",
-            Page: window.location.href, 
-            Timezone: Intl.DateTimeFormat().resolvedOptions().timeZone, 
-            App: {
-                Name: "MPX Imóvel", 
-                Version: "1.0.0" 
-            },
-            Campaign: {
-                utm_source: utm_source,
-                utm_medium: utm_medium,
-                utm_content: utm_content,
-                utm_campaign: utm_campaign,
-                fbclid: fbclid,
-                gclid: gclid
-            },
-            Device: {
-                UserAgent: navigator.userAgent,
-                Platform: navigator.platform, 
-                Vendor: navigator.vendor, 
-                ScreenResolution: `${window.screen.width}x${window.screen.height}`,
-                DeviceType: /Mobile|Android|iPhone/.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
-                SecureConnection: window.location.protocol === 'https:'
+            Page: window.location.href,
+            Timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            App: { Name: 'MPX Imóvel', Version: '1.0.0' },
+            DeviceType: /Mobile|Android|iPhone/.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
+            ScreenResolution: `${window.screen.width}x${window.screen.height}`,
+            SecureConnection: window.location.protocol === 'https:',
+            Geolocation: {
+                Country: geoData.country_name || "Desconhecido",
+                Region: geoData.region || "Desconhecido",
+                City: geoData.city || "Desconhecido",
+                Latitude: geoData.latitude || "Desconhecido",
+                Longitude: geoData.longitude || "Desconhecido",
             }
         },
 
         event_properties: {
             Login: {
-                Method: loginMethod, 
-                Provider: loginProvider, 
-                Success: true, 
-                LoginTimestamp: new Date().toISOString(), 
+                Method: loginMethod,
+                Provider: loginProvider,
+                Success: true,
+                LoginTimestamp: new Date().toISOString(),
             },
             PageLoad: {
-                LoadTime: window.performance ? window.performance.timing.domContentLoadedEventEnd - window.performance.timing.navigationStart : null, 
-                Referrer: document.referrer || "" 
+                LoadTime: window.performance ? window.performance.timing.domContentLoadedEventEnd - window.performance.timing.navigationStart : null,
+                Referrer: document.referrer || ""
             },
             BrowserInfo: {
                 CookiesEnabled: navigator.cookieEnabled,
-                Language: navigator.language || navigator.userLanguage, 
-                OnlineStatus: navigator.onLine 
+                Language: navigator.language || navigator.userLanguage,
+                OnlineStatus: navigator.onLine
             }
         },
 
@@ -135,4 +130,4 @@ async function postDataLogin(nome, email, celular, userId, loginMethod) {
 }
 
 // Chame a função com os parâmetros necessários
-postDataLogin(properties.param1, properties.param2, document.getElementById("input-register--phone-mask").value, properties.param3, properties.param4);
+postDataLogin(properties.param1, properties.param2, properties.param3, properties.param4, properties.param5);
