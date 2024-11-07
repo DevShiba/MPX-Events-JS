@@ -33,12 +33,14 @@ function setCookie(name, value, minutes) {
     return sessionId;
   }
   
-  // Função para formatar valores monetários em reais (R$)
+  // Função para formatar valores monetários em reais (R$) ou retornar "Não Informado"
   function formatCurrency(value) {
-    return value ? `R$${value.toLocaleString('pt-BR')}` : null;
+    if (!value || value === "0") return "Não Informado";
+    const numericValue = String(value).replace(/[^\d]/g, ''); // Converte para string e remove caracteres não numéricos
+    return numericValue ? `R$${parseInt(numericValue, 10).toLocaleString('pt-BR')}` : "Não Informado";
   }
   
-  async function postSearchEvent(userId, intention, userEmail) {
+  async function postSearchEvent(userId, userEmail, intention) {
     // Obtendo o IP do usuário no formato IPv4
     const ipResponse = await fetch('https://api.ipify.org?format=json');
     const ipData = await ipResponse.json();
@@ -55,7 +57,7 @@ function setCookie(name, value, minutes) {
     const valorMinimo = formatCurrency(document.getElementById('valor-minimo').value || null);
     const valorMaximo = formatCurrency(document.getElementById('valor-maximo').value || null);
   
-    const userIsLoggedIn = userEmail ? true : false;
+    const userIsLoggedIn = !!userEmail;
   
     const data = {
       event_name: 'search_event',
@@ -82,7 +84,7 @@ function setCookie(name, value, minutes) {
   
       event_properties: {
         SearchParameters: {
-          Finalidade: intention,
+          Finalidade: intention, // Ajuste conforme necessário para capturar a intenção corretamente
           Bairros: bairros,
           Categoria: categorias,
           ValorMinimo: valorMinimo,
