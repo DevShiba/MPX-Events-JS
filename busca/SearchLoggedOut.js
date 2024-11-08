@@ -153,7 +153,6 @@ async function postSearchEvent(userId, userEmail) {
 
     user_properties: {
       user_is_loggedin_in: userIsLoggedIn,
-      user_email: userEmail,
     },
 
     event_properties: {
