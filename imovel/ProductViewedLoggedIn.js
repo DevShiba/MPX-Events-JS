@@ -1,4 +1,17 @@
 async function postProductViewed(userId, userEmail, userName, userNumber) {
+    const minInterval = 10000; // Intervalo mínimo de 10 segundos em milissegundos
+    const lastViewedKey = `last_product_viewed_${userId}`;
+    const now = Date.now();
+    const lastViewedTime = parseInt(localStorage.getItem(lastViewedKey), 10);
+
+    // Verifica se o intervalo mínimo já passou
+    if (lastViewedTime && (now - lastViewedTime < minInterval)) {
+        return;
+    }
+
+    // Armazena o horário atual como o último acionamento
+    localStorage.setItem(lastViewedKey, now);
+
     // Captura o código do imóvel a partir da URL
     const urlParams = new URLSearchParams(window.location.search);
     const propertyCode = urlParams.get('codigo');
@@ -98,9 +111,7 @@ async function postProductViewed(userId, userEmail, userName, userNumber) {
 
         event_properties: {
             ProductDetails: {
-                Código: propertyCode,
-                Categoria: "",
-                Finalidade: "",
+                PropertyCode: propertyCode,
                 ViewedTimestamp: new Date().toISOString(),
             },
             PageLoad: {
