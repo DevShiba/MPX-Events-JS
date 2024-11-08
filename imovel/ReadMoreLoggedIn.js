@@ -55,7 +55,7 @@ async function postProductViewed(userId, userEmail, userName, userNumber) {
     const userIsLoggedIn = !!userEmail;
 
     const data = {
-        event_name: 'product_shared',
+        event_name: 'product_details_viewed',
         event_timestamp: new Date().toISOString(),
         user_id: userId,
         session_id: session_id,
@@ -99,7 +99,7 @@ async function postProductViewed(userId, userEmail, userName, userNumber) {
                 Código: propertyCode,
                 Categoria: "",
                 Finalidade: "",
-                SharedTimestamp: new Date().toISOString(),
+                InteractionTimestamp: new Date().toISOString(),
             },
             PageLoad: {
                 LoadTime: window.performance ? window.performance.timing.domContentLoadedEventEnd - window.performance.timing.navigationStart : null,
