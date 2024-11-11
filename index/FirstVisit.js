@@ -124,20 +124,13 @@ async function postFirstVisit(userId) {
       created_at: new Date().toISOString(),
     };
   
-    // Envio ao Supabase
-    fetch('https://jvbqgifuvpcongukenle.supabase.co/rest/v1/website_events', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          apikey:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp2YnFnaWZ1dnBjb25ndWtlbmxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY5OTgyNTksImV4cCI6MjAzMjU3NDI1OX0.nqi1ughjDBslEXSyY9razvwI8hfnUaaD5dphEc_Ao7E',
-          Authorization:
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp2YnFnaWZ1dnBjb25ndWtlbmxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY5OTgyNTksImV4cCI6MjAzMjU3NDI1OX0.nqi1ughjDBslEXSyY9razvwI8hfnUaaD5dphEc_Ao7E',
-        },
-        body: JSON.stringify(data),
-      }).catch(error => {
-        console.error('Error:', error);
-      });
+    fetch("https://backend.dataxmarketing.com.br/webhook-test/9f411f91-5c0e-4103-8cf1-626d380745d3", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data)
+    })
   
     // Marca a primeira visita do usuário no localStorage
     localStorage.setItem(firstVisitKey, 'true');
