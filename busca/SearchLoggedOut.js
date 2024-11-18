@@ -102,7 +102,9 @@ function parseURLParameters() {
     "quarto-armario": "Quarto com Armário",
     "ar-condicionado": "Ar Condicionado",
     "piscina-coletiva": "Piscina Coletiva",
-    "cozinha-planejada": "Cozinha Planejada"
+    "cozinha-planejada": "Cozinha Planejada",
+    "churrasqueira": "Churrasqueira",
+    "churrasqueira-condominio": "Churrasqueira Condomínio"
   };
 
   urlParams.forEach((value, key) => {
@@ -175,7 +177,7 @@ async function postSearchEvent(userId, userEmail) {
     created_at: new Date().toISOString(),
   };
 
-  fetch("https://backend.dataxmarketing.com.br/webhook-test/9f411f91-5c0e-4103-8cf1-626d380745d3", {
+  fetch("https://webhook.dataxmarketing.com.br/webhook/9f411f91-5c0e-4103-8cf1-626d380745d3", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

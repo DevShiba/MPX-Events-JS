@@ -64,7 +64,7 @@ async function postDataLogin(userName, userEmail, userNumber, userId, loginMetho
     }
 
     const data = {
-        event_name: "account_created", 
+        event_name: "login", 
         event_timestamp: new Date().toISOString(),
         user_id: `${userId}`,
         session_id: session_id, 

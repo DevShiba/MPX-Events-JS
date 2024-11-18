@@ -1,18 +1,4 @@
 async function postProductViewed(userId, userEmail, userName, userNumber) {
-    const minInterval = 10000; // Intervalo mínimo de 10 segundos em milissegundos
-    const lastViewedKey = `last_product_viewed_${userId}`;
-    const now = Date.now();
-    const lastViewedTime = parseInt(localStorage.getItem(lastViewedKey), 10);
-
-    // Verifica se o intervalo mínimo já passou
-    if (lastViewedTime && (now - lastViewedTime < minInterval)) {
-        return;
-    }
-
-    // Armazena o horário atual como o último acionamento
-    localStorage.setItem(lastViewedKey, now);
-
-    // Captura o código do imóvel a partir da URL
     const urlParams = new URLSearchParams(window.location.search);
     const propertyCode = urlParams.get('codigo');
 
@@ -68,9 +54,8 @@ async function postProductViewed(userId, userEmail, userName, userNumber) {
     const session_id = getSessionId();
     const userIsLoggedIn = !!userEmail;
 
-    // Dados do evento `product_viewed`
     const data = {
-        event_name: 'product_viewed',
+        event_name: 'whatsapp_contact',
         event_timestamp: new Date().toISOString(),
         user_id: userId,
         session_id: session_id,
@@ -114,7 +99,7 @@ async function postProductViewed(userId, userEmail, userName, userNumber) {
                 Código: propertyCode,
                 Categoria: "",
                 Finalidade: "",
-                ViewedTimestamp: new Date().toISOString(),
+                SharedTimestamp: new Date().toISOString(),
             },
             PageLoad: {
                 LoadTime: window.performance ? window.performance.timing.domContentLoadedEventEnd - window.performance.timing.navigationStart : null,
@@ -139,7 +124,7 @@ async function postProductViewed(userId, userEmail, userName, userNumber) {
         created_at: new Date().toISOString(),
     };
 
-    fetch("https://webhook.dataxmarketing.com.br/webhook/9f411f91-5c0e-4103-8cf1-626d380745d3", {
+    fetch("https://backend.dataxmarketing.com.br/webhook-test/9f411f91-5c0e-4103-8cf1-626d380745d3", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -148,5 +133,5 @@ async function postProductViewed(userId, userEmail, userName, userNumber) {
       })
 }
 
-// Chame a função para visualizar o produto
+// Chame a função para visualizar o produto 
 postProductViewed(properties.param1, properties.param2, properties.param3, properties.param4);
